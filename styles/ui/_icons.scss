@@ -1,0 +1,29 @@
+@import "icon-config";
+
+[class*="icon-"] {
+  font-family: 'icomoon';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.icon-arrow-up:before {
+  content: "\e600";
+}
+.icon-arrow-down:before {
+  content: "\e601";
+}
+.icon-arrow-left:before {
+  content: "\e602";
+}
+.icon-arrow-right:before {
+  content: "\e603";
+}

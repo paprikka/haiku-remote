@@ -1,0 +1,2 @@
+compass watch &
+grunt

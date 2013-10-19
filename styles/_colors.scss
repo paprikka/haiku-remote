@@ -1,0 +1,83 @@
+//////////////////////////////////////////
+// Brand color (used with brand ID)     //
+// ------------------------------------ //
+//////////////////////////////////////////
+
+
+$brand-color:       #facade;
+
+
+//////////////////////////////////////////
+// Grays                                //
+// ------------------------------------ //
+//////////////////////////////////////////
+
+$black:             #000;
+$gray-darker:       #161927;
+$gray-dark:         #2c3e50;
+$gray:              #505155;
+$gray-light:        #5D6168;;
+$gray-lighter:      desaturate(darken(#CFDCE8, 5%), 25%);
+$gray-lightest:     #fdfbfa;
+$white:             #fefefe;
+
+
+//////////////////////////////////////////
+// Accent colors                        //
+// ------------------------------------ //
+//////////////////////////////////////////
+
+$blue:              #049cdb;
+$blueDark:          #0064cd;
+$green:             #2ecc71;
+$red:               #EB6453;
+$yellow:            #f1c40f;
+$orange:            #f89406;
+$pink:              #c3325f;
+$purple:            #7a43b6;
+
+
+
+//////////////////////////////////////////
+// Scaffolding                          //
+// ------------------------------------ //
+//////////////////////////////////////////
+
+$bodyBackground:    $gray-lightest;
+$textColor:         $gray-dark;
+
+
+//////////////////////////////////////////
+// Links                                //
+// ------------------------------------ //
+//////////////////////////////////////////
+
+$linkColor:         $blue;
+$linkColorHover:    darken($linkColor, 15%);
+
+
+///////////
+// Forms //
+///////////
+
+$form-input-focus:  white;
+
+//////////////////////////////////////////
+// Additional (based on FlatUI)         //
+// ------------------------------------ //
+//////////////////////////////////////////
+
+$successDark:       #27ae60;
+$infoDark:          #2980b9;
+$brightDark:        #f39c12;
+$amethyst:          #9b59b6;
+$wisteria:          #8e44ad;
+$carrot:            #e67e22;
+$pumpkin:           #d35400;
+$alizarin:          #e74c3c;
+$pomegranate:       #c0392b;
+$clouds:            #ecf0f1;
+$silver:            #bdc3c7;
+$concrete:          #95a5a6;
+$asbestos:          #7f8c8d;
+$wetAsphalt:        #34495E;

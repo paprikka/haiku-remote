@@ -1,0 +1,47 @@
+
+
+.btn{
+  min-width: 40px;
+  border-radius: 2px;
+  
+  @include transition(.2s box-shadow);
+  @include background-image(linear-gradient(top, rgba(255,255,255,.1) 0%,rgba(255,255,255,.0) 100%));
+
+  &:active, &.active{
+    @include box-shadow(0 1px 1px shadow-col(0.2) inset);
+  }
+
+  &:disabled, &.disabled{
+    opacity: .6;
+  }
+
+  &:focus{
+    @include box-shadow(0 0 2px rgba(0,0,0,.1));
+  }
+
+  &:focus{
+    &:hover, &:active, &.active{
+      @include box-shadow(0 0 2px rgba(0,0,0,.1), 0 1px 1px rgba(0,0,0,.2) inset);
+    }
+  }
+}
+
+
+.btn--positive{
+  background-color: $green;  
+}
+
+.btn--negative{
+  background-color: $red;
+}
+
+.btn--inverse{
+  background-color: $black;
+  color: $white;
+}
+
+.btn--transparent{
+  background:none btn--transparent;
+  border: none;
+
+}
