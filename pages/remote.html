@@ -1,2 +1,7 @@
 
-<haiku-remote></haiku-remote>
+<div>
+  <form ng-submit="joinRoom(roomID)" class="remote__tools">
+    <input placeholder="Enter room ID" haiku-select-all="haiku-select-all" ng-model="roomID" readonly="readonly" class="remote__room"/>
+  </form>
+  <haiku-remote remote="remote" preview-status="previewStatus"></haiku-remote>
+</div>

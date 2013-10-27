@@ -132,7 +132,12 @@ angular.module("pages/partials/intro.html", []).run(["$templateCache", function(
 angular.module("pages/remote.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("pages/remote.html",
     "\n" +
-    "<haiku-remote></haiku-remote>");
+    "<div>\n" +
+    "  <form ng-submit=\"joinRoom(roomID)\" class=\"remote__tools\">\n" +
+    "    <input placeholder=\"Enter room ID\" haiku-select-all=\"haiku-select-all\" ng-model=\"roomID\" readonly=\"readonly\" class=\"remote__room\"/>\n" +
+    "  </form>\n" +
+    "  <haiku-remote remote=\"remote\" preview-status=\"previewStatus\"></haiku-remote>\n" +
+    "</div>");
 }]);
 
 angular.module("remote/remote.html", []).run(["$templateCache", function($templateCache) {
@@ -140,10 +145,10 @@ angular.module("remote/remote.html", []).run(["$templateCache", function($templa
     "\n" +
     "<div class=\"remote\">\n" +
     "  <div class=\"remote__nav\">\n" +
-    "    <button class=\"remote__up\"></button>\n" +
-    "    <button class=\"remote__right\"></button>\n" +
-    "    <button class=\"remote__down\"></button>\n" +
-    "    <button class=\"remote__left\"></button>\n" +
+    "    <button ng-class=\" {'remote__btn--disabled' : isFirstSlide} \" class=\"remote__up\"></button>\n" +
+    "    <button ng-class=\" {'remote__btn--disabled' : isLastCategory} \" class=\"remote__right\"></button>\n" +
+    "    <button ng-class=\" {'remote__btn--disabled' : isLastSlide} \" class=\"remote__down\"></button>\n" +
+    "    <button ng-class=\" {'remote__btn--disabled' : isFirstCategory} \" class=\"remote__left\"></button>\n" +
     "  </div>\n" +
     "</div>");
 }]);
