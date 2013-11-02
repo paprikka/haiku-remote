@@ -81,8 +81,11 @@ angular.module('pl.paprikka.haiku-remote.controllers.remote', ['common.services.
     $scope.previewStatus = {};
     $scope.remote = new Remote;
     $scope.roomID = $routeParams.roomID;
+    $scope.topMessage = 'Connecting...';
     $rootScope.$on('room:joined', function(e, data) {
       console.log('Joined: ', data);
+      $scope.topMessage = $routeParams.roomID;
+      $scope.status = 'ready';
       return $scope.remote.broadcastJoinedRemote($scope.roomID);
     });
     $scope.joinRoom = function(roomID) {
@@ -105,51 +108,76 @@ angular.module('pl.paprikka.haiku-remote.directives.remote', []).directive('haik
         previewStatus: '='
       },
       link: function(scope, elm, attr) {
-        var onKeyDown, updateStatus;
+        var keyCodes, onKeyDown, updateStatus;
+        scope.remoteStatus = 'no';
         updateStatus = function() {
-          var currCat, currSlide, _ref, _ref1;
-          currCat = scope.previewStatus.currentCategory;
-          currSlide = scope.previewStatus.currentSlide;
-          scope.isLastCategory = currCat === scope.previewStatus.categories.length - 1 ? true : false;
-          scope.isLastSlide = currSlide === ((_ref = scope.previewStatus.categories[currCat]) != null ? (_ref1 = _ref.slides) != null ? _ref1.length : void 0 : void 0) - 1 ? true : false;
-          scope.isFirstCategory = currCat === 0 ? true : false;
-          return scope.isFirstSlide = currSlide === 0 ? true : false;
+          var currentCategory, currentSlide, _ref, _ref1;
+          currentCategory = scope.previewStatus.currentCategory;
+          currentSlide = scope.previewStatus.currentSlide;
+          scope.isLastCategory = currentCategory === scope.previewStatus.categories.length - 1 ? true : false;
+          scope.isLastSlide = currentSlide === ((_ref = scope.previewStatus.categories[currentCategory]) != null ? (_ref1 = _ref.slides) != null ? _ref1.length : void 0 : void 0) - 1 ? true : false;
+          scope.isFirstCategory = currentCategory === 0 ? true : false;
+          return scope.isFirstSlide = currentSlide === 0 ? true : false;
         };
         $rootScope.$on('haiku:remote:update', function(e, data) {
+          scope.remoteStatus = 'ready';
           console.log('update!', data);
           return scope.$apply(function() {
             scope.previewStatus = data;
             return updateStatus();
           });
         });
-        onKeyDown = function(e) {
+        keyCodes = {
+          37: 'left',
+          38: 'up',
+          39: 'right',
+          40: 'down'
+        };
+        scope.goto = function(direction) {
           if (!scope.$$phase) {
             return scope.$apply(function() {
-              switch (e.keyCode) {
-                case 37:
-                  return scope.remote.go('left');
-                case 38:
-                  return scope.remote.go('up');
-                case 39:
-                  return scope.remote.go('right');
-                case 40:
-                  return scope.remote.go('down');
+              var position, ps;
+              ps = scope.previewStatus;
+              position = {
+                currentSlide: ps.currentSlide,
+                currentCategory: ps.currentCategory
+              };
+              switch (direction) {
+                case 'left':
+                  position.currentCategory = Math.max(position.currentCategory - 1, 0);
+                  position.currentSlide = 0;
+                  break;
+                case 'up':
+                  position.currentSlide = Math.max(position.currentSlide - 1, 0);
+                  break;
+                case 'right':
+                  position.currentCategory = Math.min(ps.categories.length - 1, position.currentCategory + 1);
+                  position.currentSlide = 0;
+                  break;
+                case 'down':
+                  position.currentSlide = Math.min(ps.categories[position.currentCategory].slides.length - 1, position.currentSlide + 1);
               }
+              return scope.remote.goto(position);
             });
+          }
+        };
+        onKeyDown = function(e) {
+          if (keyCodes[e.keyCode]) {
+            return scope.goto(keyCodes[e.keyCode]);
           }
         };
         $('body').on('keydown', onKeyDown);
         Hammer(elm.find('.remote__up')[0]).on('tap', function() {
-          return scope.remote.go('up');
+          return scope.goto('up');
         });
         Hammer(elm.find('.remote__right')[0]).on('tap', function() {
-          return scope.remote.go('right');
+          return scope.goto('right');
         });
         Hammer(elm.find('.remote__down')[0]).on('tap', function() {
-          return scope.remote.go('down');
+          return scope.goto('down');
         });
         return Hammer(elm.find('.remote__left')[0]).on('tap', function() {
-          return scope.remote.go('left');
+          return scope.goto('left');
         });
       }
     };
@@ -168,13 +196,27 @@ angular.module('pl.paprikka.haiku-remote.services.remote', []).factory('Remote',
       function Remote() {
         var _this = this;
         socket.on('room:joined', function(data) {
+          console.log('Remote::room joined');
           _this.room = data.room;
           return $rootScope.$emit('room:joined', data);
         });
         socket.on('remote:update', function(data) {
+          console.log('Remote::update received', data);
           return $rootScope.$emit('haiku:remote:update', data.data);
         });
       }
+
+      Remote.prototype.goto = function(position) {
+        var message;
+        console.log(position);
+        message = {
+          command: 'position',
+          params: position,
+          room: this.room
+        };
+        console.log('Remote::control goto');
+        return socket.emit('remote', message);
+      };
 
       Remote.prototype.go = function(direction) {
         var message;
@@ -188,10 +230,12 @@ angular.module('pl.paprikka.haiku-remote.services.remote', []).factory('Remote',
           },
           room: this.room
         };
+        console.log('Remote::control direction (go)');
         return socket.emit('remote', message);
       };
 
       Remote.prototype.join = function(room) {
+        console.log('Remote::joining room');
         return socket.emit('room:join', {
           room: room,
           isRemote: true
@@ -199,12 +243,14 @@ angular.module('pl.paprikka.haiku-remote.services.remote', []).factory('Remote',
       };
 
       Remote.prototype.broadcastJoinedRemote = function(room) {
+        console.log('Remote::broadcast join');
         return socket.emit('remote:remoteJoined', {
           room: room
         });
       };
 
       Remote.prototype.leave = function(room, cb) {
+        console.log('Remote::leave');
         return socket.emit('room:leave', {
           room: room
         });

@@ -43,10 +43,6 @@ angular.module("head.html", []).run(["$templateCache", function($templateCache) 
     "  </script><!--[if lte IE 8]>\n" +
     "  <script src=\"//html5shiv.googlecode.com/svn/trunk/html5.js\"></script><![endif]-->\n" +
     "  <script src=\"js/modernizr.js\"></script>\n" +
-    "  <script src=\"http://haiku-hub.herokuapp.com/socket.io/socket.io.js\"></script>\n" +
-    "  <script src=\"js/vendor.js\"></script>\n" +
-    "  <script src=\"js/templates.js\"></script>\n" +
-    "  <script src=\"js/app.js\"></script>\n" +
     "</head>");
 }]);
 
@@ -95,20 +91,30 @@ angular.module("index.html", []).run(["$templateCache", function($templateCache)
     "    </script><!--[if lte IE 8]>\n" +
     "    <script src=\"//html5shiv.googlecode.com/svn/trunk/html5.js\"></script><![endif]-->\n" +
     "    <script src=\"js/modernizr.js\"></script>\n" +
-    "    <script src=\"http://haiku-hub.herokuapp.com/socket.io/socket.io.js\"></script>\n" +
-    "    <script src=\"js/vendor.js\"></script>\n" +
-    "    <script src=\"js/templates.js\"></script>\n" +
-    "    <script src=\"js/app.js\"></script>\n" +
     "  </head>\n" +
     "  <body ng-controller=\"AppCtrl\" ng-app=\"app\" id=\"ng-app\">\n" +
     "    <div class=\"viewport\">\n" +
     "      <div ng-view class=\"viewport__content\"></div>\n" +
     "    </div>\n" +
+    "    <script src=\"@@hubURL/socket.io/socket.io.js\"></script>\n" +
     "    <script>\n" +
-    "      $('body').on('touchmove', function (e) {\n" +
-    "         if (!$('.scrollable').has($(e.target)).length) e.preventDefault();\n" +
-    "      });\n" +
+    "      window.haiku = {\n" +
+    "        config: {\n" +
+    "          hubURL: '@@hubURL'\n" +
+    "        }\n" +
+    "      }\n" +
     "    </script>\n" +
+    "    <script src=\"js/vendor.js\"></script>\n" +
+    "    <script>\n" +
+    "      $(function(){\n" +
+    "        $('body').on('touchmove', function (e) {\n" +
+    "           if (!$('.scrollable').has($(e.target)).length) e.preventDefault();\n" +
+    "        });\n" +
+    "      });\n" +
+    "      \n" +
+    "    </script>\n" +
+    "    <script src=\"js/templates.js\"></script>\n" +
+    "    <script src=\"js/app.js\"></script>\n" +
     "  </body>\n" +
     "</html>");
 }]);
@@ -133,10 +139,10 @@ angular.module("pages/remote.html", []).run(["$templateCache", function($templat
   $templateCache.put("pages/remote.html",
     "\n" +
     "<div>\n" +
-    "  <form ng-submit=\"joinRoom(roomID)\" class=\"remote__tools\">\n" +
-    "    <input placeholder=\"Enter room ID\" haiku-select-all=\"haiku-select-all\" ng-model=\"roomID\" readonly=\"readonly\" class=\"remote__room\"/>\n" +
-    "  </form>\n" +
-    "  <haiku-remote remote=\"remote\" preview-status=\"previewStatus\"></haiku-remote>\n" +
+    "  <div class=\"remote__tools\"><span class=\"remote__room\">{{topMessage}}</span></div>\n" +
+    "  <div ng-show=\"status == 'ready'\">\n" +
+    "    <haiku-remote remote=\"remote\" preview-status=\"previewStatus\"></haiku-remote>\n" +
+    "  </div>\n" +
     "</div>");
 }]);
 
