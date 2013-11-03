@@ -254,8 +254,7 @@ angular.module('pl.paprikka.haiku-remote.services.remote', []).factory('Remote',
   '$rootScope'
 
   ( WebSockets, $rootScope ) ->
-    HUB_LOCATION = 'http://haiku-hub.herokuapp.com:80'
-    SOCKET_LOCATION = if location.hostname.split('.')[0] is '192' then location.hostname + ':8082' else HUB_LOCATION
+    SOCKET_LOCATION = haiku.config.hubURL
     socket = WebSockets.connect SOCKET_LOCATION
     class Remote
       room: null

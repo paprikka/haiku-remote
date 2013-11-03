@@ -186,9 +186,8 @@ angular.module('pl.paprikka.haiku-remote.directives.remote', []).directive('haik
 
 angular.module('pl.paprikka.haiku-remote.services.remote', []).factory('Remote', [
   'WebSockets', '$rootScope', function(WebSockets, $rootScope) {
-    var HUB_LOCATION, Remote, SOCKET_LOCATION, socket;
-    HUB_LOCATION = 'http://haiku-hub.herokuapp.com:80';
-    SOCKET_LOCATION = location.hostname.split('.')[0] === '192' ? location.hostname + ':8082' : HUB_LOCATION;
+    var Remote, SOCKET_LOCATION, socket;
+    SOCKET_LOCATION = haiku.config.hubURL;
     socket = WebSockets.connect(SOCKET_LOCATION);
     Remote = (function() {
       Remote.prototype.room = null;
